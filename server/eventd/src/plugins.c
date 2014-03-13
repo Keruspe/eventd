@@ -300,6 +300,21 @@ eventd_plugins_stop_all(void)
     }
 }
 
+static EventdctlReturnCode
+eventd_plugin_command_status_to_eventdctl_return_code(EventdPluginCommandStatus status)
+{
+    switch ( status )
+    {
+    case EVENTD_PLUGIN_COMMAND_STATUS_COMMAND_ERROR:
+        return EVENTDCTL_RETURN_CODE_PLUGIN_COMMAND_ERROR;
+    case EVENTD_PLUGIN_COMMAND_STATUS_EXEC_ERROR:
+        return EVENTDCTL_RETURN_CODE_PLUGIN_EXEC_ERROR;
+    case EVENTD_PLUGIN_COMMAND_STATUS_OK:
+    default:
+        return EVENTDCTL_RETURN_CODE_OK;
+    }
+}
+
 EventdctlReturnCode
 eventd_plugins_control_command(const gchar *id, guint64 argc, const gchar * const *argv, gchar **status)
 {
@@ -321,7 +336,7 @@ eventd_plugins_control_command(const gchar *id, guint64 argc, const gchar * cons
         r = EVENTDCTL_RETURN_CODE_PLUGIN_ERROR;
     }
     else
-        r = plugin->interface.control_command(plugin->context, argc, argv, status);
+        r = eventd_plugin_command_status_to_eventdctl_return_code(plugin->interface.control_command(plugin->context, argc, argv, status));
 
     return r;
 }
