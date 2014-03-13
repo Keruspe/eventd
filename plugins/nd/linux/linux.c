@@ -162,25 +162,6 @@ _eventd_nd_linux_display_free(EventdNdDisplay *display)
     g_free(display);
 }
 
-static inline guchar
-alpha_div(guchar c, guchar a)
-{
-#if 0
-    guint16 t;
-    switch ( a )
-    {
-    case 0xff:
-        return c;
-    case 0x00:
-        return 0x00;
-    default:
-        t = c / a + 0x7f;
-        return ((t << 8) + t) << 8;
-    }
-#endif
-    return c;
-}
-
 static EventdNdSurface *
 _eventd_nd_linux_surface_new(EventdEvent *event, EventdNdDisplay *display, cairo_surface_t *bubble)
 {
